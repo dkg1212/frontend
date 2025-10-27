@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 // src/CompleteProfile.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updateProfile } from "./api";
 
@@ -21,11 +21,33 @@ export default function CompleteProfile() {
       const raw = localStorage.getItem("user-info");
       const parsed = raw ? JSON.parse(raw) : null;
       setUser(parsed);
-      if (!parsed?.token) navigate("/login", { replace: true });
+      if (!parsed?.token) {
+        navigate("/login", { replace: true });
+        return;
+      }
+      if (parsed?.role) setRole(parsed.role);
+      if (parsed?.rollNumber) setRollNumber(parsed.rollNumber);
+      if (parsed?.deviceId) setDeviceId(parsed.deviceId);
+      if (parsed?.department) setDepartment(parsed.department);
+      if (parsed?.semester) setSemester(parsed.semester);
     } catch {
       navigate("/login", { replace: true });
     }
   }, [navigate]);
+
+  const isProfileComplete = useMemo(() => {
+    if (!user) return false;
+    if (user?.profileComplete) return true;
+    if (!user?.role) return false;
+    if (user.role === "student") return Boolean(user?.rollNumber && user?.deviceId);
+    return true;
+  }, [user]);
+
+  useEffect(() => {
+    if (isProfileComplete) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isProfileComplete, navigate]);
 
   const isStudent = role === "student";
   const rollRegex = /^[A-Z0-9][A-Z0-9\-\/]*$/;
@@ -61,6 +83,12 @@ export default function CompleteProfile() {
         deviceId: deviceId || user.deviceId,
         department: department || user.department,
         semester: semester || user.semester,
+        profileComplete:
+          role !== "student"
+            ? true
+            : Boolean(
+                (rollNumber || user.rollNumber) && (deviceId || user.deviceId)
+              ),
       };
       localStorage.setItem("user-info", JSON.stringify(merged));
 
@@ -74,6 +102,8 @@ export default function CompleteProfile() {
       setSaving(false);
     }
   };
+
+  if (!user || isProfileComplete) return null;
 
   return (
     <div style={{ maxWidth: 520, margin: "32px auto", padding: 16 }}>

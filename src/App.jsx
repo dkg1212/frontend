@@ -8,16 +8,15 @@ import Dashboard from './Dashboard';
 import { useState } from 'react';
 import RefreshHandler from './RefreshHandler';
 import NotFound from './NotFound';
-import CompleteProfile from './completeprofile';
+import CompleteProfile from './CompleteProfile';
+import Profile from './Profile';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
-  // Simple private route guard using local state set by RefreshHandler
-  const PrivateRoute = ({ element }) => (
-    isAuthenticated ? element : <Navigate to="/login" replace />
-  );
+  const PrivateRoute = ({ element }) =>
+    isAuthenticated ? element : <Navigate to="/login" replace />;
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
@@ -27,6 +26,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<GoogleLogin />} />
           <Route path="/complete-profile" element={<CompleteProfile />} />
+          <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
           <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
