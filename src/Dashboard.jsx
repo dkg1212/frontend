@@ -16,6 +16,18 @@ const Dashboard = () => {
     }
   }, []);
 
+  // NEW: redirect if profile incomplete
+  useEffect(() => {
+    if (!userInfo) return;
+    const needsProfile =
+      !userInfo?.role ||
+      (userInfo?.role === 'student' &&
+        (!userInfo?.rollNumber || !userInfo?.deviceId));
+    if (needsProfile) {
+      navigate('/complete-profile', { replace: true });
+    }
+  }, [userInfo, navigate]);
+
   const handleLogout = () => {
     localStorage.removeItem('user-info');
     navigate('/login');

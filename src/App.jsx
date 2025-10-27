@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+// src/App.jsx
 import './App.css';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLogin from './GoogleLogin';
@@ -6,31 +8,30 @@ import Dashboard from './Dashboard';
 import { useState } from 'react';
 import RefreshHandler from './RefreshHandler';
 import NotFound from './NotFound';
+import CompleteProfile from './completeprofile';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
-  const GoogleWrapper = () => (
-    <GoogleOAuthProvider clientId="924470151805-40go9narrc79c8ni8b0thjnl38vgvt1t.apps.googleusercontent.com">
-      <GoogleLogin />
-    </GoogleOAuthProvider>
+  // Simple private route guard using local state set by RefreshHandler
+  const PrivateRoute = ({ element }) => (
+    isAuthenticated ? element : <Navigate to="/login" replace />
   );
 
-  // eslint-disable-next-line react/prop-types
-  const PrivateRoute = ({ element }) => {
-    return isAuthenticated ? element : <Navigate to="/login" />;
-  };
-
   return (
-    <BrowserRouter>
-      <RefreshHandler setIsAuthenticated={setIsAuthenticated} />
-      <Routes>
-        <Route path="/login" element={<GoogleWrapper />} />
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId={clientId}>
+      <BrowserRouter>
+        <RefreshHandler setIsAuthenticated={setIsAuthenticated} />
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<GoogleLogin />} />
+          <Route path="/complete-profile" element={<CompleteProfile />} />
+          <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 
