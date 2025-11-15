@@ -10,6 +10,10 @@ import RefreshHandler from './RefreshHandler';
 import NotFound from './NotFound';
 import CompleteProfile from './CompleteProfile';
 import Profile from './Profile';
+import SessionQR from "./SessionQR";
+import CreateSession from "./CreateSession";
+
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,6 +32,8 @@ function App() {
           <Route path="/complete-profile" element={<CompleteProfile />} />
           <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
           <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
+          <Route path="/session/:id/qr" element={<PrivateRoute element={<SessionQR />} />} />
+          <Route path="/create-session" element={<PrivateRoute element={<CreateSession />} />}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-empty */
 // src/Dashboard.jsx
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +9,7 @@ const APP_NAME = "Smart Attendance System";
 const Dashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sessionId, setSessionId] = useState(null);     // ⭐ FIXED — sessionId stored here
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Dashboard = () => {
     }
   }, []);
 
-  // Auto-mark profileComplete if already satisfied
+  // Auto-mark profileComplete
   useEffect(() => {
     try {
       const raw = localStorage.getItem("user-info");
@@ -195,6 +196,16 @@ const Dashboard = () => {
                   Update profile
                 </button>
 
+                {/* ⭐ FIXED — Only visible when sessionId exists */}
+                {sessionId && (
+                  <button
+                    onClick={() => navigate(`/session/${sessionId}/qr`)}
+                    className="w-full text-left px-2 py-2 rounded-md text-blue-600 hover:bg-blue-50"
+                  >
+                    Show QR
+                  </button>
+                )}
+
                 <button
                   onClick={handleLogout}
                   role="menuitem"
@@ -214,6 +225,14 @@ const Dashboard = () => {
           Welcome {userInfo?.name}
         </h1>
         <p className="text-gray-500 text-lg">{APP_NAME}</p>
+
+        {/* ⭐ Teacher starts a session */}
+        <button
+          onClick={() => navigate("/create-session")}
+          className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Start New Session
+        </button>
       </main>
     </div>
   );
