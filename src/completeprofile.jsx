@@ -39,14 +39,13 @@ export default function CompleteProfile() {
     if (!user) return false;
     if (user?.profileComplete) return true;
     if (!user?.role) return false;
-    if (user.role === "student") return Boolean(user?.rollNumber && user?.deviceId);
+    if (user.role === "student")
+      return Boolean(user?.rollNumber && user?.deviceId);
     return true;
   }, [user]);
 
   useEffect(() => {
-    if (isProfileComplete) {
-      navigate("/dashboard", { replace: true });
-    }
+    if (isProfileComplete) navigate("/dashboard", { replace: true });
   }, [isProfileComplete, navigate]);
 
   const isStudent = role === "student";
@@ -87,16 +86,20 @@ export default function CompleteProfile() {
           role !== "student"
             ? true
             : Boolean(
-                (rollNumber || user.rollNumber) && (deviceId || user.deviceId)
+                (rollNumber || user.rollNumber) &&
+                  (deviceId || user.deviceId)
               ),
       };
+
       localStorage.setItem("user-info", JSON.stringify(merged));
 
       setStatus("Profile updated.");
       navigate("/dashboard", { replace: true });
     } catch (err) {
       const msg =
-        err?.response?.data?.message || err?.message || "Failed to update profile.";
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to update profile.";
       setError(msg);
     } finally {
       setSaving(false);
@@ -106,14 +109,22 @@ export default function CompleteProfile() {
   if (!user || isProfileComplete) return null;
 
   return (
-    <div style={{ maxWidth: 520, margin: "32px auto", padding: 16 }}>
-      <h2>Complete your profile</h2>
-      <p style={{ color: "#666" }}>Signed in as {user?.email || "unknown"}.</p>
+    <div className="max-w-lg mx-auto mt-10 p-4">
+      <h2 className="text-2xl font-semibold mb-1">Complete your profile</h2>
+      <p className="text-gray-600 mb-6">
+        Signed in as {user?.email || "unknown"}.
+      </p>
 
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
-        <label>
-          Role
-          <select value={role} onChange={(e) => setRole(e.target.value)} required>
+      <form onSubmit={handleSubmit} className="grid gap-4">
+        {/* Role */}
+        <label className="flex flex-col gap-1">
+          <span className="font-medium">Role</span>
+          <select
+            className="border rounded-md px-3 py-2 bg-white"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          >
             <option value="">Select role</option>
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
@@ -121,20 +132,26 @@ export default function CompleteProfile() {
           </select>
         </label>
 
+        {/* Student fields */}
         {isStudent && (
           <>
-            <label>
-              Roll Number
+            <label className="flex flex-col gap-1">
+              <span className="font-medium">Roll Number</span>
               <input
+                className="border rounded-md px-3 py-2"
                 value={rollNumber}
-                onChange={(e) => setRollNumber(e.target.value.toUpperCase().trim())}
+                onChange={(e) =>
+                  setRollNumber(e.target.value.toUpperCase().trim())
+                }
                 placeholder="e.g., CSE-2025-001"
                 required
               />
             </label>
-            <label>
-              Device ID
+
+            <label className="flex flex-col gap-1">
+              <span className="font-medium">Device ID</span>
               <input
+                className="border rounded-md px-3 py-2"
                 value={deviceId}
                 onChange={(e) => setDeviceId(e.target.value.trim())}
                 placeholder="Device identifier"
@@ -144,33 +161,41 @@ export default function CompleteProfile() {
           </>
         )}
 
-        <label>
-          Department
+        {/* Department */}
+        <label className="flex flex-col gap-1">
+          <span className="font-medium">Department</span>
           <input
+            className="border rounded-md px-3 py-2"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
             placeholder="e.g., CSE"
           />
         </label>
 
-        <label>
-          Semester
+        {/* Semester */}
+        <label className="flex flex-col gap-1">
+          <span className="font-medium">Semester</span>
           <input
+            className="border rounded-md px-3 py-2"
             value={semester}
             onChange={(e) => setSemester(e.target.value)}
             placeholder="e.g., 5"
           />
         </label>
 
-        <div>
-          <button type="submit" disabled={saving}>
-            {saving ? "Saving…" : "Save and continue"}
-          </button>
-        </div>
+        {/* Save button */}
+        <button
+          type="submit"
+          disabled={saving}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+        >
+          {saving ? "Saving…" : "Save and continue"}
+        </button>
 
-        <div aria-live="polite" style={{ minHeight: 18 }}>
-          {status && <span style={{ color: "#1a73e8" }}>{status}</span>}
-          {error && <span style={{ color: "#d93025" }}>{error}</span>}
+        {/* Status & Error */}
+        <div aria-live="polite" className="min-h-[18px] text-sm">
+          {status && <span className="text-blue-600">{status}</span>}
+          {error && <span className="text-red-600">{error}</span>}
         </div>
       </form>
     </div>

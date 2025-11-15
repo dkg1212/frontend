@@ -1,48 +1,9 @@
-/* src/index.css */
+@import "tailwindcss";
+
 :root {
+  --app-bg: #f5f7fb;
+  --accent: #1a73e8;
+  --muted: #64748b;
+  --card-border: #e9eef5;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html, body { height: 100%; }
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background: #f5f7fb;
-  color: #0f172a;
-  /* no display:flex, no center-all */
-}
-
-a { color: #1a73e8; text-decoration: none; font-weight: 500; }
-a:hover { text-decoration: underline; }
-
-h1 { margin: 0; line-height: 1.2; }
-
-button {
-  border-radius: 8px;
-  border: 1px solid #e3e8ef;
-  padding: 10px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  background: #fff;
-  color: #111827;
-  cursor: pointer;
-  transition: background .2s ease, box-shadow .2s ease;
-}
-button:hover { background: #f8fafc; }
-button:focus { outline: 3px solid #1a73e8; outline-offset: 2px; }
-
-.container { max-width: 960px; margin: 0 auto; padding: 24px; }
-
-@media (prefers-color-scheme: dark) {
-  body { background: #0b1220; color: #e5e7eb; }
-  button { background: #111827; color: #e5e7eb; border-color: #374151; }
-  button:hover { background: #0f172a; }
 }
