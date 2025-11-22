@@ -9,7 +9,7 @@ const APP_NAME = "Smart Attendance System";
 const Dashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [sessionId, setSessionId] = useState(null);     // ⭐ FIXED — sessionId stored here
+  const [sessionId, setSessionId] = useState(null);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Dashboard = () => {
     }
   }, []);
 
-  // Auto-mark profileComplete
+  // Auto-mark profileComplete if already satisfied
   useEffect(() => {
     try {
       const raw = localStorage.getItem("user-info");
@@ -167,7 +167,7 @@ const Dashboard = () => {
                 role="menu"
                 className="absolute right-0 mt-3 w-60 bg-white shadow-xl rounded-xl border border-gray-200 p-3 z-50"
               >
-                {/* Top User Box */}
+                {/* User info */}
                 <div className="flex items-center gap-3 border-b border-gray-100 pb-3 mb-2">
                   <Avatar size={34} />
                   <div className="min-w-0">
@@ -180,23 +180,15 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <button
-                  onClick={gotoProfile}
-                  role="menuitem"
-                  className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100"
-                >
+                <button onClick={gotoProfile} className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100">
                   View profile
                 </button>
 
-                <button
-                  onClick={gotoUpdateProfile}
-                  role="menuitem"
-                  className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100"
-                >
+                <button onClick={gotoUpdateProfile} className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100">
                   Update profile
                 </button>
 
-                {/* ⭐ FIXED — Only visible when sessionId exists */}
+                {/* Show QR only if a session exists */}
                 {sessionId && (
                   <button
                     onClick={() => navigate(`/session/${sessionId}/qr`)}
@@ -206,13 +198,46 @@ const Dashboard = () => {
                   </button>
                 )}
 
+                {/* ⭐ NEW — REPORTS SHORTCUTS */}
+                <div className="mt-3 border-t border-gray-200 pt-2">
+                  <p className="text-xs text-gray-500 mb-1">Reports</p>
+
+                  <button
+                    onClick={() => navigate("/reports/student/monthly")}
+                    className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100"
+                  >
+                    Student Monthly Report
+                  </button>
+
+                  <button
+                    onClick={() => navigate("/reports/course-wise")}
+                    className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100"
+                  >
+                    Course-wise Report
+                  </button>
+
+                  <button
+                    onClick={() => navigate("/reports/student/course")}
+                    className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100"
+                  >
+                    Student Course Report
+                  </button>
+
+                  <button
+                    onClick={() => navigate("/reports/student/semester")}
+                    className="w-full text-left px-2 py-2 rounded-md text-gray-800 hover:bg-gray-100"
+                  >
+                    Semester Report
+                  </button>
+                </div>
+
                 <button
                   onClick={handleLogout}
-                  role="menuitem"
-                  className="w-full text-left px-2 py-2 rounded-md text-red-600 hover:bg-red-50"
+                  className="w-full text-left px-2 py-2 rounded-md text-red-600 hover:bg-red-50 mt-2"
                 >
                   Logout
                 </button>
+
               </div>
             )}
           </div>
@@ -226,13 +251,50 @@ const Dashboard = () => {
         </h1>
         <p className="text-gray-500 text-lg">{APP_NAME}</p>
 
-        {/* ⭐ Teacher starts a session */}
+        {/* Start a session */}
         <button
           onClick={() => navigate("/create-session")}
           className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           Start New Session
         </button>
+
+        {/* ⭐ NEW — Report Shortcuts */}
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+
+          <button
+            onClick={() => navigate("/reports/student/monthly")}
+            className="p-4 bg-white border rounded-lg shadow hover:bg-gray-50 text-left"
+          >
+            <h3 className="font-bold text-gray-800">Student Monthly Report</h3>
+            <p className="text-gray-500 text-sm">View attendance by month.</p>
+          </button>
+
+          <button
+            onClick={() => navigate("/reports/course-wise")}
+            className="p-4 bg-white border rounded-lg shadow hover:bg-gray-50 text-left"
+          >
+            <h3 className="font-bold text-gray-800">Course-wise Report</h3>
+            <p className="text-gray-500 text-sm">Report per course.</p>
+          </button>
+
+          <button
+            onClick={() => navigate("/reports/student/course")}
+            className="p-4 bg-white border rounded-lg shadow hover:bg-gray-50 text-left"
+          >
+            <h3 className="font-bold text-gray-800">Student Course Report</h3>
+            <p className="text-gray-500 text-sm">Student-specific course stats.</p>
+          </button>
+
+          <button
+            onClick={() => navigate("/reports/student/semester")}
+            className="p-4 bg-white border rounded-lg shadow hover:bg-gray-50 text-left"
+          >
+            <h3 className="font-bold text-gray-800">Semester Report</h3>
+            <p className="text-gray-500 text-sm">Course stats for semester.</p>
+          </button>
+
+        </div>
       </main>
     </div>
   );

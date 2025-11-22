@@ -12,6 +12,11 @@ import CompleteProfile from './CompleteProfile';
 import Profile from './Profile';
 import SessionQR from "./SessionQR";
 import CreateSession from "./CreateSession";
+import ReportStudentMonthly from "./ReportStudentMonthly";
+import ReportCourseWise from "./ReportCourseWise";
+import ReportStudentCourse from "./ReportStudentCourse";
+import ReportSemester from "./ReportSemester";
+
 
 
 
@@ -34,6 +39,26 @@ function App() {
           <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
           <Route path="/session/:id/qr" element={<PrivateRoute element={<SessionQR />} />} />
           <Route path="/create-session" element={<PrivateRoute element={<CreateSession />} />}/>
+          <Route
+  path="/reports/student/monthly"
+  element={<PrivateRoute element={<ReportStudentMonthly />} />}
+/>
+
+<Route
+  path="/reports/course-wise"
+  element={<PrivateRoute element={<ReportCourseWise />} />}
+/>
+
+<Route
+  path="/reports/student/course"
+  element={<PrivateRoute element={<ReportStudentCourse />} />}
+/>
+
+<Route
+  path="/reports/student/semester"
+  element={<PrivateRoute element={<ReportSemester />} />}
+/>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
